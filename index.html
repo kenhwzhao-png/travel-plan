@@ -290,17 +290,19 @@
         {
           id: 0, date: "9月30日（周三）", title: "香港 → 新加坡 ✈️ + 🌊 Jewel 雨漩涡",
           timeline: [
-            { time: "06:00", title: "起床 + 简单早餐", desc: "" },
+            { time: "06:00", title: "起床", desc: "不吃早餐，去机场吃" },
             { time: "07:00", title: "🚖 港车到达楼下", desc: "5座/7座包车（9/28 已订）" },
             { time: "07:30", title: "出发去香港机场", desc: "预计1小时车程，08:30到达" },
-            { time: "08:30", title: "到达香港机场", desc: "办理登机 + 托运 + 过海关" },
-            { time: "11:50", title: "✈️ CX791 起飞", desc: "香港 → 新加坡" },
+            { time: "08:30", title: "到达香港机场", desc: "办登机 + 托运 + 过海关" },
+            { time: "09:00-11:00", title: "🛋️ CX Lounge The Bridge 吃早餐", desc: "过了海关后去 The Bridge Lounge，现煮面档、点心、咖啡、水果，吃饱上飞机" },
+            { time: "11:50", title: "✈️ CX791 起飞", desc: "香港 → 新加坡（飞机上也有餐食）" },
             { time: "15:40", title: "到达樟宜机场", desc: "过海关（已填 MyICA 快速通关）" },
-            { time: "16:00-18:00", title: "🌊 Jewel 星耀樟宜", desc: "逛 Jewel + 看雨漩涡（傍晚光线好，人少好拍照）。行李可寄存在机场（S$5-10/件）", warn: "💡 19:00 灯光秀最震撼" },
-            { time: "18:30", title: "Grab 至酒店", desc: "Four Points by Sheraton Singapore Riverview，约25分钟，S$18-25" },
-            { time: "19:00", title: "酒店入住 + 休整", desc: "放下行李，洗个澡休息一下" },
-            { time: "20:00", title: "晚餐（克拉码头）", desc: "珍宝海鲜 / 路边简餐 / 松发肉骨茶（克拉码头分店）" },
-            { time: "22:00", title: "回酒店休息", desc: "明天早起去 USS" },
+            { time: "16:00-19:30", title: "🌊 Jewel 星耀樟宜", desc: "逛 Jewel + 拍照 + 购物。行李可寄存机场（S$5-10/件）", info: "💡 傍晚到晚上 Jewel 灯光效果最佳，慢慢逛等 20:00 场雨漩涡灯光秀" },
+            { time: "19:30", title: "🌊 雨漩涡灯光秀（20:00场）", desc: "提前占好位置，看震撼灯光秀" },
+            { time: "20:00", title: "🚖 Grab 至酒店", desc: "Four Points by Sheraton，约25分钟，S$18-25" },
+            { time: "20:30", title: "🏨 酒店入住", desc: "放下行李" },
+            { time: "21:00", title: "🍜 晚餐（克拉码头）", desc: "松发肉骨茶（Clarke Quay分店）或路边简餐，步行10分钟。克拉码头餐厅营业到凌晨，21点吃饭完全来得及" },
+            { time: "22:30", title: "回酒店休息", desc: "明天早起去环球影城" },
           ]
         },
         {
@@ -597,6 +599,13 @@
         travelData.comments = parsed.comments || [];
         travelData.reminders = parsed.reminders || travelData.reminders;
       } catch(e) {}
+    }
+    
+    // 修复误触：URL 带 ?uncheck=ID 可恢复某个提醒的勾选状态
+    const uncheckId = parseInt(new URLSearchParams(window.location.search).get('uncheck'));
+    if (uncheckId) {
+      const r = travelData.reminders.find(r => r.id === uncheckId);
+      if (r) { r.done = false; save(); }
     }
     
     render();
