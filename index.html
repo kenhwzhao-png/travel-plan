@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>新隆旅行攻略 2026</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f5f5; color: #333; line-height: 1.5; -webkit-text-size-adjust: 100%; }
+    
+    /* ============ 登录页 ============ */
+    #loginOverlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .login-box {
+      background: white; border-radius: 16px; padding: 40px 30px;
+      width: 320px; max-width: 90vw;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .login-box h2 { text-align: center; color: #333; margin-bottom: 8px; font-size: 22px; }
+    .login-box p { text-align: center; color: #888; margin-bottom: 24px; font-size: 14px; }
+    .login-box input {
+      width: 100%; padding: 12px 14px; margin-bottom: 12px;
+      border: 2px solid #e0e0e0; border-radius: 8px;
+      font-size: 16px; outline: none; transition: border-color 0.2s;
+    }
+    .login-box input:focus { border-color: #667eea; }
+    .login-box button {
+      width: 100%; padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white; border: none; border-radius: 8px;
+      font-size: 16px; font-weight: 600; cursor: pointer;
+    }
+    .login-box button:hover { opacity: 0.9; }
+    .login-box .error { color: #dc3545; font-size: 13px; text-align: center; margin-bottom: 12px; display: none; }
+    @media (max-width: 480px) {
+      .login-box { padding: 30px 20px; }
+      .login-box input { font-size: 18px; }
+    }
+
+    header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 18px 15px; text-align: center; position: sticky; top: 0; z-index: 100; }
+    header h1 { font-size: 20px; margin-bottom: 4px; }
+    header p { font-size: 13px; opacity: 0.9; }
+    
+    .container { max-width: 800px; margin: 0 auto; padding: 12px; }
+    
+    /* 紧急提醒横幅 */
+    .urgent-banner { background: #ffe0e0; border: 2px solid #dc3545; border-radius: 8px; padding: 12px; margin-bottom: 15px; }
+    .urgent-banner h3 { color: #dc3545; margin-bottom: 8px; font-size: 15px; }
+    .urgent-banner p { font-size: 12px; color: #721c24; margin: 4px 0; line-height: 1.4; word-break: break-word; }
+    .urgent-banner a { color: #dc3545; text-decoration: underline; }
+    
+    /* 出发前重要事项 */
+    .prep-section { background: white; border-radius: 10px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .prep-section h2 { background: #ffc107; color: #333; padding: 12px 15px; font-size: 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; -webkit-tap-highlight-color: transparent; }
+    .prep-section h2:hover { background: #ffb300; }
+    .prep-content { padding: 12px; display: none; }
+    .prep-section.open .prep-content { display: block; }
+    .prep-section h2 .arrow { transition: transform 0.3s; font-size: 12px; }
+    .prep-section.open h2 .arrow { transform: rotate(180deg); }
+    
+    .checklist { list-style: none; }
+    .checklist li { padding: 8px 6px; border-bottom: 1px solid #eee; display: flex; align-items: flex-start; gap: 8px; }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { margin-top: 2px; width: 20px; height: 20px; cursor: pointer; flex-shrink: 0; accent-color: #667eea; }
+    .checklist label { cursor: pointer; flex: 1; }
+    .checklist .done label { text-decoration: line-through; color: #999; }
+    .checklist .item-title { font-weight: 500; margin-bottom: 2px; font-size: 14px; }
+    .checklist .item-desc { font-size: 12px; color: #666; line-height: 1.3; }
+    
+    .category-title { font-size: 15px; font-weight: 600; color: #667eea; margin: 12px 0 8px 0; padding-bottom: 5px; border-bottom: 2px solid #667eea; }
+    .category-title:first-child { margin-top: 0; }
+    
+    /* 待办提醒 */
+    .reminder-banner { background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 12px; margin-bottom: 15px; }
+    .reminder-banner h3 { color: #856404; margin-bottom: 8px; font-size: 15px; }
+    .reminder-banner .task { background: white; padding: 8px; margin: 5px 0; border-radius: 5px; display: flex; align-items: flex-start; gap: 8px; }
+    .reminder-banner .task.done { opacity: 0.5; }
+    .reminder-banner .task.done label { text-decoration: line-through; }
+    .reminder-banner input[type="checkbox"] { width: 18px; height: 18px; margin-top: 1px; flex-shrink: 0; accent-color: #ffc107; }
+    .reminder-banner label { cursor: pointer; flex: 1; font-size: 13px; line-height: 1.3; }
+    
+    /* 日期卡片 */
+    .day-card { background: white; border-radius: 10px; margin-bottom: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .day-header { padding: 12px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; border-bottom: 1px solid #eee; user-select: none; -webkit-tap-highlight-color: transparent; }
+    .day-header:hover { background: #e9ecef; }
+    .day-header h2 { font-size: 15px; line-height: 1.3; }
+    .day-header .date { color: #666; font-size: 12px; margin-top: 2px; }
+    .day-content { padding: 15px; display: none; }
+    .day-card.open .day-content { display: block; }
+    .arrow { transition: transform 0.3s; font-size: 12px; }
+    .day-card.open .arrow { transform: rotate(180deg); }
+    
+    /* 时间轴 */
+    .timeline { position: relative; padding-left: 22px; }
+    .timeline::before { content: ''; position: absolute; left: 5px; top: 0; bottom: 0; width: 2px; background: #667eea; }
+    .timeline-item { position: relative; padding: 8px 0 12px 12px; }
+    .timeline-item::before { content: ''; position: absolute; left: -20px; top: 16px; width: 10px; height: 10px; border-radius: 50%; background: #667eea; border: 2px solid white; box-shadow: 0 0 0 2px #667eea; }
+    .timeline-time { font-weight: 600; color: #667eea; font-size: 12px; }
+    .timeline-title { font-size: 13px; font-weight: 500; margin: 2px 0; line-height: 1.3; }
+    .timeline-desc { font-size: 12px; color: #666; line-height: 1.4; }
+    .timeline-warn { font-size: 12px; color: #dc3545; margin-top: 3px; line-height: 1.3; }
+    .timeline-info { font-size: 12px; color: #28a745; margin-top: 3px; line-height: 1.3; }
+    
+    /* 评论区 */
+    .comments-section { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
+    .comments-section h3 { margin-bottom: 8px; font-size: 14px; }
+    .comment { background: #f8f9fa; padding: 8px; border-radius: 8px; margin-bottom: 8px; }
+    .comment .author { font-weight: 600; color: #667eea; font-size: 12px; }
+    .comment .text { margin-top: 3px; font-size: 13px; line-height: 1.4; }
+    .comment .time { font-size: 10px; color: #999; margin-top: 3px; }
+    .comment-form { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+    .comment-form input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+    .comment-form button { width: 100%; padding: 10px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; -webkit-tap-highlight-color: transparent; }
+    
+    /* 分享 */
+    .share-section { background: white; padding: 12px; border-radius: 10px; margin-bottom: 15px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .share-section p { font-size: 13px; margin-bottom: 8px; }
+    .share-section input { width: 100%; padding: 8px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; }
+    .btn { padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; -webkit-tap-highlight-color: transparent; }
+    .btn-primary { background: #667eea; color: white; }
+    .btn-primary:active { background: #5568d3; }
+    
+    footer { text-align: center; padding: 15px 12px; color: #999; font-size: 11px; }
+    
+    /* 📱 手机适配 (max-width: 768px) */
+    @media (max-width: 768px) {
+      header { padding: 15px 12px; }
+      header h1 { font-size: 18px; }
+      .container { padding: 10px; }
+      
+      .urgent-banner { padding: 10px; margin-bottom: 12px; }
+      .urgent-banner h3 { font-size: 14px; }
+      
+      .prep-section h2 { padding: 10px 12px; font-size: 15px; }
+      .prep-content { padding: 10px; }
+      .checklist li { padding: 7px 5px; }
+      
+      .reminder-banner { padding: 10px; margin-bottom: 12px; }
+      
+      .day-card { margin-bottom: 10px; }
+      .day-header { padding: 10px 12px; }
+      .day-content { padding: 12px; }
+      
+      .timeline { padding-left: 20px; }
+      .timeline-item { padding: 6px 0 10px 10px; }
+      .timeline-item::before { left: -18px; width: 9px; height: 9px; }
+    }
+    
+    @media (max-width: 380px) {
+      header h1 { font-size: 16px; }
+      .day-header h2 { font-size: 14px; }
+      .timeline-time { font-size: 11px; }
+      .timeline-title { font-size: 12px; }
+      .checklist .item-title { font-size: 13px; }
+      .checklist .item-desc { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- 登录保护 -->
+  <div id="loginOverlay">
+    <div class="login-box">
+      <h2>🔒 新隆旅行攻略</h2>
+      <p>请输入访问密码</p>
+      <div class="error" id="loginError">用户名或密码错误</div>
+      <input type="text" id="loginUser" placeholder="用户名" autocomplete="off">
+      <input type="password" id="loginPass" placeholder="密码">
+      <button onclick="doLogin()">进入攻略</button>
+    </div>
+  </div>
+  <header>
+    <h1>🌏 新隆旅行攻略 2026</h1>
+    <p>9月30日 — 10月7日 | 新加坡 + 吉隆坡</p>
+  </header>
+  
+  <div class="container">
+    <!-- 紧急横幅 -->
+    <div class="urgent-banner">
+      <h3>🚨 出发前必做！</h3>
+      <p>📝 <b>9月27日前</b>：填新加坡 MyICA 入境表（<a href="https://eservices.ica.gov.sg" target="_blank" rel="noopener">eservices.ica.gov.sg</a>）</p>
+      <p>📝 <b>9月30日前</b>：填马来西亚 MDAC 入境卡（<a href="https://imigresen-online.imi.gov.my/mdac/main" target="_blank" rel="noopener">点此填写</a>）</p>
+      <p>🦀 <b>9月28日</b>：预订珍宝海鲜（<a href="https://www.jumboseafood.com.sg" target="_blank" rel="noopener">官网</a> / +65 6532 3435）</p>
+      <p>🚖 <b>9月28日下午</b>：预订港车（9/30 早上 07:30 出发去机场）</p>
+    </div>
+    
+    <!-- 分享区 -->
+    <div class="share-section">
+      <p>📱 分享给火山哥：</p>
+      <input type="text" id="shareLink" readonly />
+      <button class="btn btn-primary" onclick="copyLink()">复制链接</button>
+      <span id="copyTip" style="color: #28a745; display: none; margin-left: 10px; font-size: 12px;">✅ 已复制！</span>
+    </div>
+    
+    <!-- 出发前重要事项（带 checkbox） -->
+    <div class="prep-section open" id="prepSection">
+      <h2 onclick="toggleSection('prepSection')">
+        <span>📋 出发前重要事项（必看！）</span>
+        <span class="arrow">▼</span>
+      </h2>
+      <div class="prep-content">
+        <div class="category-title">🎒 必带物品清单</div>
+        <ul class="checklist" id="itemsList">
+          <li><input type="checkbox" id="item-1" onchange="saveChecklist()" /><label for="item-1"><div class="item-title">护照（有效期>6个月）</div><div class="item-desc">香港出发，新加坡/马来西亚都免签，但必须带护照</div></label></li>
+          <li><input type="checkbox" id="item-2" onchange="saveChecklist()" /><label for="item-2"><div class="item-title">港币现金（备少量）+ 新币 + 马币</div><div class="item-desc">新马都可以用信用卡/支付宝，现金少量备用</div></label></li>
+          <li><input type="checkbox" id="item-3" onchange="saveChecklist()" /><label for="item-3"><div class="item-title">信用卡（Visa/Master）</div><div class="item-desc">新加坡樟宜机场、吉隆坡 KLIA 都支持</div></label></li>
+          <li><input type="checkbox" id="item-4" onchange="saveChecklist()" /><label for="item-4"><div class="item-title">转换插头（英标 G 型）</div><div class="item-desc">新马都用英标三角插头，带万能转换头更保险</div></label></li>
+          <li><input type="checkbox" id="item-5" onchange="saveChecklist()" /><label for="item-5"><div class="item-title">充电宝（< 100Wh）</div><div class="item-desc">飞机携带规定：不超过 100Wh（毫安时），需随身携带</div></label></li>
+          <li><input type="checkbox" id="item-6" onchange="saveChecklist()" /><label for="item-6"><div class="item-title">雨伞 + 防晒霜 + 防晒衣</div><div class="item-desc">9月底新马仍多雨，10月多晴天但日照强</div></label></li>
+          <li><input type="checkbox" id="item-7" onchange="saveChecklist()" /><label for="item-7"><div class="item-title">防蚊液 + 蚊虫止痒膏</div><div class="item-desc">新加坡相对干净，马来西亚尤其吉隆坡蚊子较多</div></label></li>
+          <li><input type="checkbox" id="item-8" onchange="saveChecklist()" /><label for="item-8"><div class="item-title">泳衣 + 拖鞋</div><div class="item-desc">酒店有泳池，圣淘沙海滩可能用到</div></label></li>
+          <li><input type="checkbox" id="item-9" onchange="saveChecklist()" /><label for="item-9"><div class="item-title">常用药（感冒、肠胃、创可贴）</div><div class="item-desc">新马饮食偏辣，肠胃药必备</div></label></li>
+          <li><input type="checkbox" id="item-10" onchange="saveChecklist()" /><label for="item-10"><div class="item-title">The Weeknd 演唱会门票（电子/纸质）</div><div class="item-desc">10月2日 National Stadium，提前截图保存到手机相册</div></label></li>
+          <li><input type="checkbox" id="item-11" onchange="saveChecklist()" /><label for="item-11"><div class="item-title">🚖 已订港车（9/30 早上 07:30 出发）</div><div class="item-desc">5座/7座包车，9/28 下午订好。约车app：HKCar / ucab / 微信小程序"香港机场快线" / 直接联系熟悉的司机</div></label></li>
+        </ul>
+        
+        <div class="category-title">📲 出发前必装 APP</div>
+        <ul class="checklist">
+          <li><input type="checkbox" id="app-1" onchange="saveChecklist()" /><label for="app-1"><div class="item-title">Grab（打车）</div><div class="item-desc">新马两地通用，支持支付宝付款</div></label></li>
+          <li><input type="checkbox" id="app-2" onchange="saveChecklist()" /><label for="app-2"><div class="item-title">Google Maps</div><div class="item-desc">导航 + 公交查询，新马都好用</div></label></li>
+          <li><input type="checkbox" id="app-3" onchange="saveChecklist()" /><label for="app-3"><div class="item-title">Universal Studios Singapore</div><div class="item-desc">查实时排队时间</div></label></li>
+          <li><input type="checkbox" id="app-4" onchange="saveChecklist()" /><label for="app-4"><div class="item-title">Klook / Trip.com</div><div class="item-desc">买景点门票（双子塔观景台等）</div></label></li>
+          <li><input type="checkbox" id="app-5" onchange="saveChecklist()" /><label for="app-5"><div class="item-title">MyICA（新加坡入境）</div><div class="item-desc">9月27日前填入境表</div></label></li>
+          <li><input type="checkbox" id="app-6" onchange="saveChecklist()" /><label for="app-6"><div class="item-title">支付宝（部分商家支持）</div><div class="item-desc">汇率比现金好</div></label></li>
+        </ul>
+        
+        <div class="category-title">📞 紧急联系方式</div>
+        <ul class="checklist">
+          <li><label><div class="item-title">新加坡报警/救护：<b>999</b></div><div class="item-desc">火警/救护/报警通用</div></label></li>
+          <li><label><div class="item-title">马来西亚报警/救护：<b>999</b></div><div class="item-desc">火警/救护/报警通用</div></label></li>
+          <li><label><div class="item-title">中国驻新加坡大使馆：<b>+65 6471 2117</b></div><div class="item-desc">地址：150 Tanglin Road, Singapore 247969</div></label></li>
+          <li><label><div class="item-title">中国驻马来西亚大使馆：<b>+60 3 2161 6814</b></div><div class="item-desc">地址：229 Jalan Ampang, 50450 Kuala Lumpur</div></label></li>
+          <li><label><div class="item-title">新加坡濠景福朋喜来登酒店：<b>+65 6739 7788</b></div><div class="item-desc">382 Havelock Rd, Singapore 169629</div></label></li>
+          <li><label><div class="item-title">The Platinum 2 KLCC by Miudee：<b>前台+60 3-2022 0000</b></div><div class="item-desc">C-23, The Platinum 2, 107 Jalan Kuchai Lama, KL</div></label></li>
+        </ul>
+        
+        <div class="category-title">🛡️ 旅行保险（建议）</div>
+        <ul class="checklist">
+          <li><input type="checkbox" id="ins-1" onchange="saveChecklist()" /><label for="ins-1"><div class="item-title">已购买旅行保险</div><div class="item-desc">建议覆盖：医疗、行李丢失、航班延误、紧急救援</div></label></li>
+          <li><input type="checkbox" id="ins-2" onchange="saveChecklist()" /><label for="ins-2"><div class="item-title">保险单已截图保存</div><div class="item-desc">手机相册 + 微信收藏各存一份</div></label></li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- 提醒区 -->
+    <div class="reminder-banner" id="reminderBanner">
+      <h3>⏰ 近期待办</h3>
+      <div id="reminderList"></div>
+    </div>
+    
+    <!-- 天数列表 -->
+    <div id="daysList"></div>
+    
+    <!-- 评论区（全局） -->
+    <div class="day-card">
+      <div class="day-header" onclick="toggleDayCard(this)">
+        <div>
+          <h2>💬 旅行讨论区</h2>
+          <div class="date">火山哥可在此留言（输入名字后留言）</div>
+        </div>
+        <span class="arrow">▼</span>
+      </div>
+      <div class="day-content" style="display:block">
+        <div id="commentsList"></div>
+        <div class="comment-form">
+          <input type="text" id="commentAuthor" placeholder="你的名字" value="我" style="max-width:100%;" />
+          <input type="text" id="commentInput" placeholder="留言..." />
+          <button class="btn btn-primary" onclick="addComment()">发送</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer>🌏 祝你 & 火山哥旅途愉快！</footer>
+  
+  <script>
+    // ============ 行程数据（时间轴版本） ============
+    const travelData = {
+      reminders: [
+        { id: 1, date: "2026-09-27", task: "📝 填写新加坡 MyICA 入境表", done: false, link: "https://eservices.ica.gov.sg" },
+        { id: 2, date: "2026-09-28", task: "🦀 预订珍宝海鲜（提前3天）", done: false },
+        { id: 5, date: "2026-09-28", task: "🚖 预订港车（9/30 07:30 出发）", done: false },
+        { id: 3, date: "2026-09-29", task: "🧳 收拾行李 + 检查必带物品清单", done: false },
+        { id: 4, date: "2026-09-30", task: "📝 填写马来西亚 MDAC 入境卡", done: false, link: "https://imigresen-online.imi.gov.my/mdac/main" },
+      ],
+      days: [
+        {
+          id: 0, date: "Day 1 | 9月30日（周三）", title: "香港 → 新加坡 ✈️ + 🌊 Jewel 雨漩涡",
+          timeline: [
+            { time: "06:00", title: "起床 + 简单早餐", desc: "" },
+            { time: "07:00", title: "🚖 港车到达楼下", desc: "5座/7座包车（9/28 已订）" },
+            { time: "07:30", title: "出发去香港机场", desc: "预计1小时车程，08:30到达" },
+            { time: "08:30", title: "到达香港机场", desc: "办理登机 + 托运 + 过海关" },
+            { time: "11:50", title: "✈️ CX791 起飞", desc: "香港 → 新加坡" },
+            { time: "15:40", title: "到达樟宜机场", desc: "过海关（已填 MyICA 快速通关）" },
+            { time: "16:00-18:00", title: "🌊 Jewel 星耀樟宜", desc: "逛 Jewel + 看雨漩涡（傍晚光线好，人少好拍照）。行李可寄存在机场（S$5-10/件）", warn: "💡 19:00 灯光秀最震撼" },
+            { time: "18:30", title: "Grab 至酒店", desc: "Four Points by Sheraton Singapore Riverview，约25分钟，S$18-25" },
+            { time: "19:00", title: "酒店入住 + 休整", desc: "放下行李，洗个澡休息一下" },
+            { time: "20:00", title: "晚餐（克拉码头）", desc: "珍宝海鲜 / 路边简餐 / 松发肉骨茶（克拉码头分店）" },
+            { time: "22:00", title: "回酒店休息", desc: "明天早起去 USS" },
+          ]
+        },
+        {
+          id: 1, date: "Day 2 | 10月1日（周四）", title: "圣淘沙 + 环球影城 🎢",
+          timeline: [
+            { time: "07:30", title: "起床 + 简单早餐", desc: "酒店早餐或 Grab 买咖啡面包" },
+            { time: "08:30", title: "Grab 至 VivoCity", desc: "约15-20分钟，S$12-15" },
+            { time: "09:00", title: "搭圣淘沙快轨到 Beach 站", desc: "在 VivoCity 3楼，圣淘沙快轨 S$4" },
+            { time: "09:30", title: "排队等 USS 开门", desc: "⚠️ 早到能避开大部队" },
+            { time: "10:00", title: "🎢 USS 开园！冲变形金刚！", desc: "进门右手边科幻城市区" },
+            { time: "12:30", title: "午餐（公园内）", desc: "各种主题餐厅" },
+            { time: "13:30-17:00", title: "继续刷项目", desc: "必玩：变形金刚 / 木乃伊复仇记 / 太空堡垒 / 侏罗纪漂流 / 未来水世界 / 小黄人乐园" },
+            { time: "17:00-18:00", title: "离开 USS", desc: "普通票建议 17:00 离园避人流" },
+            { time: "19:30", title: "晚餐：珍宝海鲜（已订位）", desc: "Clarke Quay 分店" },
+            { time: "21:30", title: "回酒店休息", desc: "" },
+          ]
+        },
+        {
+          id: 2, date: "Day 3 | 10月2日（周五）", title: "市区游览 + The Weeknd 演唱会 🎤",
+          timeline: [
+            { time: "10:00", title: "🚶 鱼尾狮公园", desc: "打卡拍照" },
+            { time: "10:30", title: "🚶 步行至滨海湾金沙", desc: "外观拍照，约5分钟" },
+            { time: "11:00", title: "🚶 滨海艺术中心", desc: "榴莲壳外观" },
+            { time: "11:15", title: "🚶 滨海湾花园", desc: "超级树 + 温室" },
+            { time: "12:30", title: "午餐：松发肉骨茶（Clarke Quay 总店）", desc: "地址：17 New Bridge Rd" },
+            { time: "14:00", title: "🚶 牛车水（唐人街）", desc: "逛街、买手信" },
+            { time: "15:30", title: "🚇 乌节路（Orchard Road）", desc: "购物" },
+            { time: "17:30", title: "回酒店休整 + 准备演唱会", desc: "" },
+            { time: "18:15", title: "步行至 Fort Canning MRT（DT20）", desc: "约5-8分钟" },
+            { time: "18:30", title: "🚇 地铁：Fort Canning → Stadium", desc: "紫线 → Promenade 换黄线 → Stadium，全程约20-25分钟" },
+            { time: "19:00", title: "到达 National Stadium 入场", desc: "买周边、找座位" },
+            { time: "20:00", title: "🎤 The Weeknd 演唱会开始！", desc: "" },
+            { time: "23:00-23:30", title: "散场 Grab 回酒店", desc: "⚠️ 提前预约 Grab 或步行一段再叫车（详见散场攻略）" },
+          ]
+        },
+        {
+          id: 3, date: "Day 4 | 10月3日（周六）", title: "新加坡 → 吉隆坡 ✈️",
+          timeline: [
+            { time: "09:00", title: "起床 + 退房", desc: "MH614 11:05 起飞，需提前1.5-2小时到机场" },
+            { time: "09:30", title: "Grab 至樟宜机场", desc: "" },
+            { time: "11:05", title: "✈️ MH614 起飞", desc: "新加坡 → 吉隆坡" },
+            { time: "11:47", title: "到达吉隆坡国际机场 KUL", desc: "过海关（已填 MDAC）" },
+            { time: "12:30", title: "Grab 至酒店", desc: "The Platinum 2 KLCC by Miudee，约45分钟，RM50-70" },
+            { time: "13:00", title: "酒店入住 + 休整", desc: "" },
+            { time: "15:00", title: "🚶 双子塔外观 + KLCC 公园", desc: "音乐喷泉（每晚灯光秀）" },
+            { time: "18:00", title: "晚餐：KLCC 商场或亚罗街", desc: "" },
+          ]
+        },
+        {
+          id: 4, date: "Day 5 | 10月4日（周日）", title: "吉隆坡市区经典游",
+          timeline: [
+            { time: "09:30", title: "🚇 双子塔观景台", desc: "提前买票，建议早上时段" },
+            { time: "12:00", title: "午餐：新峰肉骨茶", desc: "35-37 Medan Imbi（Pavilion 步行5分钟）" },
+            { time: "14:00", title: "🚇 国家清真寺（Masjid Negara）", desc: "免费入场，需穿长袍" },
+            { time: "15:00", title: "🚇 独立广场（Merdeka Square）", desc: "苏丹阿都沙末大厦" },
+            { time: "16:00", title: "🚇 茨厂街（Petaling Street）", desc: "唐人街" },
+            { time: "17:30", title: "🚕 黑风洞（Batu Caves）", desc: "272级阶梯 + 镀金神像。⚠️ 猴子多！" },
+            { time: "20:00", title: "晚餐：亚罗街（Jalan Alor）", desc: "葡式烧鱼、炒粿条、沙爹串、榴莲" },
+          ]
+        },
+        {
+          id: 5, date: "Day 6 | 10月5日（周一）", title: "吉隆坡深度游",
+          timeline: [
+            { time: "09:30", title: "布城（Putrajaya）半日游", desc: "粉红清真寺超好拍！打车约30-40分钟" },
+            { time: "12:00", title: "返回 KL 吃午餐", desc: "" },
+            { time: "14:00", title: "中央艺术坊（Central Market）", desc: "手工艺品、纪念品" },
+            { time: "15:30", title: "ICC Pudu 为食街", desc: "印度香酥塔饼 Roti Tissue" },
+            { time: "17:00", title: "榴莲吃到饱", desc: "猫山王、黑刺必试！" },
+            { time: "20:00", title: "告别晚餐", desc: "Cactus 西餐 / 海南鸡饭" },
+          ]
+        },
+        {
+          id: 6, date: "Day 7 | 10月6日（周二）", title: "吉隆坡最后一天",
+          timeline: [
+            { time: "09:00", title: "酒店天台泳池放松", desc: "双子塔景观" },
+            { time: "11:00", title: "Pavilion KL 逛街", desc: "最后补货" },
+            { time: "13:00", title: "午餐", desc: "亚坤咖椰吐司" },
+            { time: "15:00", title: "马来按摩 / Spa", desc: "放松一下" },
+            { time: "18:00", title: "晚餐", desc: "" },
+            { time: "20:00", title: "收拾行李", desc: "明天回香港" },
+          ]
+        },
+        {
+          id: 7, date: "Day 8 | 10月7日（周三）", title: "吉隆坡 → 香港 ✈️",
+          timeline: [
+            { time: "10:00", title: "起床 + 早餐", desc: "亚坤咖椰吐司" },
+            { time: "12:00", title: "退房", desc: "" },
+            { time: "15:00", title: "Grab 至吉隆坡国际机场 KUL", desc: "CX724 17:40 起飞" },
+            { time: "17:40", title: "✈️ CX724 起飞", desc: "吉隆坡 → 香港" },
+            { time: "21:08", title: "到达香港 🏠", desc: "结束愉快的行程！" },
+          ]
+        },
+      ],
+      comments: []
+    };
+    
+    // ============ 渲染 ============
+    function render() {
+      renderReminders();
+      renderDays();
+      renderComments();
+      updateShareLink();
+    }
+    
+    function renderReminders() {
+      const banner = document.getElementById('reminderList');
+      const today = new Date('2026-07-01'); // 实际部署时改 new Date()
+      const upcoming = travelData.reminders
+        .filter(r => !r.done && new Date(r.date) >= today)
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+      
+      if (upcoming.length === 0) {
+        banner.innerHTML = '<p style="color:#666;font-size:13px;">✅ 暂无待办事项</p>';
+        return;
+      }
+      
+      banner.innerHTML = upcoming.map(r => `
+        <div class="task ${r.done ? 'done' : ''}">
+          <input type="checkbox" ${r.done ? 'checked' : ''} onchange="toggleReminder(${r.id})" />
+          <label onclick="toggleReminder(${r.id})">
+            <span style="color:#856404;font-weight:600;">${r.date}</span> ${r.task}
+            ${r.link ? `<a href="${r.link}" target="_blank" rel="noopener" style="margin-left:8px;font-size:12px;">📎 链接</a>` : ''}
+          </label>
+        </div>
+      `).join('');
+    }
+    
+    function toggleReminder(id) {
+      const r = travelData.reminders.find(r => r.id === id);
+      if (r) r.done = !r.done;
+      save();
+      renderReminders();
+    }
+    
+    function toggleSection(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('open');
+    }
+    
+    function toggleDayCard(headerEl) {
+      const card = headerEl.parentElement;
+      card.classList.toggle('open');
+    }
+    
+    function renderDays() {
+      const list = document.getElementById('daysList');
+      list.innerHTML = travelData.days.map(day => `
+        <div class="day-card ${day.id === 0 ? 'open' : ''}" id="day-${day.id}">
+          <div class="day-header" onclick="toggleDayCard(this)">
+            <div>
+              <h2>${day.date}</h2>
+              <div class="date">${day.title}</div>
+            </div>
+            <span class="arrow">▼</span>
+          </div>
+          <div class="day-content">
+            <div class="timeline">
+              ${day.timeline.map(item => `
+                <div class="timeline-item">
+                  <div class="timeline-time">${item.time}</div>
+                  <div class="timeline-title">${item.title}</div>
+                  ${item.desc ? `<div class="timeline-desc">${item.desc}</div>` : ''}
+                  ${item.warn ? `<div class="timeline-warn">${item.warn}</div>` : ''}
+                  ${item.info ? `<div class="timeline-info">${item.info}</div>` : ''}
+                </div>
+              `).join('')}
+            </div>
+            <div class="comments-section">
+              <h3>💬 这天讨论区</h3>
+              <div id="day-comments-${day.id}"></div>
+              <div class="comment-form">
+                <input type="text" id="day-comment-author-${day.id}" placeholder="名字" value="我" />
+                <input type="text" id="day-comment-input-${day.id}" placeholder="留言..." />
+                <button class="btn btn-primary" onclick="addDayComment(${day.id})">发送</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      
+      travelData.days.forEach(day => renderDayComments(day.id));
+    }
+    
+    function renderComments() {
+      const list = document.getElementById('commentsList');
+      const general = travelData.comments.filter(c => !c.dayId);
+      list.innerHTML = general.length === 0
+        ? '<p style="color:#999;font-size:13px;">暂无留言</p>'
+        : general.map(c => `
+          <div class="comment">
+            <div class="author">${c.author}</div>
+            <div class="text">${c.text}</div>
+            <div class="time">${c.time}</div>
+          </div>
+        `).join('');
+    }
+    
+    function addComment() {
+      const author = document.getElementById('commentAuthor').value || '匿名';
+      const text = document.getElementById('commentInput').value;
+      if (!text) return;
+      
+      travelData.comments.push({
+        author, text, time: new Date().toLocaleString('zh-CN')
+      });
+      
+      document.getElementById('commentInput').value = '';
+      save();
+      renderComments();
+    }
+    
+    function renderDayComments(dayId) {
+      const el = document.getElementById(`day-comments-${dayId}`);
+      if (!el) return;
+      
+      const dayComments = travelData.comments.filter(c => c.dayId === dayId);
+      el.innerHTML = dayComments.length === 0 
+        ? '<p style="color:#999;font-size:12px;">暂无留言</p>'
+        : dayComments.map(c => `
+          <div class="comment">
+            <div class="author">${c.author}</div>
+            <div class="text">${c.text}</div>
+            <div class="time">${c.time}</div>
+          </div>
+        `).join('');
+    }
+    
+    function addDayComment(dayId) {
+      const authorEl = document.getElementById(`day-comment-author-${dayId}`);
+      const inputEl = document.getElementById(`day-comment-input-${dayId}`);
+      const author = authorEl.value || '匿名';
+      const text = inputEl.value;
+      if (!text) return;
+      
+      travelData.comments.push({
+        dayId, author, text, time: new Date().toLocaleString('zh-CN')
+      });
+      
+      inputEl.value = '';
+      save();
+      renderDayComments(dayId);
+      renderComments();
+    }
+    
+    function updateShareLink() {
+      document.getElementById('shareLink').value = window.location.href;
+    }
+    
+    function copyLink() {
+      const input = document.getElementById('shareLink');
+      input.select();
+      document.execCommand('copy');
+      const tip = document.getElementById('copyTip');
+      tip.style.display = 'inline';
+      setTimeout(() => tip.style.display = 'none', 2000);
+    }
+    
+    function save() {
+      localStorage.setItem('travelData', JSON.stringify({
+        reminders: travelData.reminders,
+        comments: travelData.comments
+      }));
+    }
+    
+    function saveChecklist() {
+      const items = {};
+      document.querySelectorAll('#itemsList input[type="checkbox"]').forEach(cb => {
+        items[cb.id] = cb.checked;
+      });
+      // 也保存 app checkboxes
+      document.querySelectorAll('.prep-content input[type="checkbox"]').forEach(cb => {
+        items[cb.id] = cb.checked;
+      });
+      localStorage.setItem('checklist', JSON.stringify(items));
+    }
+    
+    function loadChecklist() {
+      const saved = localStorage.getItem('checklist');
+      if (!saved) return;
+      try {
+        const items = JSON.parse(saved);
+        Object.entries(items).forEach(([id, checked]) => {
+          const cb = document.getElementById(id);
+          if (cb) cb.checked = checked;
+        });
+      } catch(e) {}
+    }
+    
+    // ============ 初始化 ============
+    const saved = localStorage.getItem('travelData');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        travelData.comments = parsed.comments || [];
+        travelData.reminders = parsed.reminders || travelData.reminders;
+      } catch(e) {}
+    }
+    
+    render();
+    loadChecklist();
+    
+    // ============ 登录保护 ============
+    function doLogin() {
+      const user = document.getElementById('loginUser').value.trim();
+      const pass = document.getElementById('loginPass').value.trim();
+      if (user === '火山哥' && pass === 'LDC') {
+        localStorage.setItem('travelAuth', '1');
+        document.getElementById('loginOverlay').style.display = 'none';
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+      }
+    }
+    // 自动登录检查
+    if (localStorage.getItem('travelAuth') === '1') {
+      document.getElementById('loginOverlay').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
