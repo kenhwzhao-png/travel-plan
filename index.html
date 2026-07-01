@@ -237,6 +237,16 @@
           <li><label><div class="item-title">The Platinum 2 KLCC by Miudee：<b>前台+60 3-2022 0000</b></div><div class="item-desc">C-23, The Platinum 2, 107 Jalan Kuchai Lama, KL</div></label></li>
         </ul>
         
+        <div class="category-title">✈️ 航班 & 休息室信息</div>
+        <ul class="checklist">
+          <li><label><div class="item-title">✈️ CX791 9/30 HKG→SIN 11:50-15:40</div><div class="item-desc">香港机场 T1。出发前可去 CX Lounge The Bridge 吃早餐（国泰金卡可进）</div></label></li>
+          <li><label><div class="item-title">✈️ MH614 10/3 SIN→KUL 11:05-11:47</div><div class="item-desc">新加坡樟宜<b>T2</b>出发，Gate E27 附近。实测执飞波音737-800</div></label></li>
+          <li><label><div class="item-title">🛋️ 10/3 休息室：SATS Premier Lounge（T2 Level 2）</div><div class="item-desc">MH 在 SIN 用签约休息室。你有<b>两个渠道都可用</b>：① PP卡直接进（不扣次数也可）② 国泰金卡（oneworld Sapphire）+ MH 登机牌 → 也可进 MH 签约的休息室。建议优先用国泰金卡，省PP次数。🍜 喇沙 Laksa 是好评最多的！</div></label></li>
+          <li><label><div class="item-title">🔄 T1/T2/T3 空侧互通</div><div class="item-desc">Skytrain 空侧连接 T1/T2/T3，过关后可随意穿行。T1 和 T3 也有 SATS Premier Lounge 接受 PP 卡</div></label></li>
+          <li><label><div class="item-title">✈️ CX724 10/7 KUL→HKG 17:40-21:08</div><div class="item-desc">吉隆坡<b>KUL T1</b>出发。国泰金卡可进 CX 自营休息室（有热食），PP 卡也可进 Plaza Premium Lounge</div></label></li>
+          <li><label><div class="item-title">✈️ 航班总程</div><div class="item-desc">CX791 9/30 → MH614 10/3 → CX724 10/7。全程国泰/马航，均有国泰金卡权益</div></label></li>
+        </ul>
+        
         <div class="category-title">🛡️ 旅行保险（建议）</div>
         <ul class="checklist">
           <li><input type="checkbox" id="ins-1" onchange="saveChecklist()" /><label for="ins-1"><div class="item-title">已购买旅行保险</div><div class="item-desc">建议覆盖：医疗、行李丢失、航班延误、紧急救援</div></label></li>
@@ -342,16 +352,21 @@
           ]
         },
         {
-          id: 3, date: "10月3日（周六）", title: "新加坡 → 吉隆坡 ✈️",
+          id: 3, date: "10月3日（周六）", title: "新加坡→吉隆坡✈️ + KLCC下午茶",
           timeline: [
-            { time: "09:00", title: "起床 + 退房", desc: "MH614 11:05 起飞，需提前1.5-2小时到机场" },
-            { time: "09:30", title: "Grab 至樟宜机场", desc: "" },
-            { time: "11:05", title: "✈️ MH614 起飞", desc: "新加坡 → 吉隆坡" },
-            { time: "11:47", title: "到达吉隆坡国际机场 KUL", desc: "过海关（已填 MDAC）" },
+            { time: "09:00", title: "起床 + 退房（行李托运酒店）", desc: "MH614 11:05 从樟宜<b>T2</b>出发。预计在休息室待45分钟，建议09:15前出发去机场" },
+            { time: "09:15-09:45", title: "🚖 Grab 至樟宜机场 T2", desc: "MH614 从 T2 出发，约25分钟，S$18-25" },
+            { time: "09:45-10:00", title: "🧳 办登机 + 过海关", desc: "国泰金卡凭 MH 登机牌可用优先通道" },
+            { time: "10:00-10:45", title: "🛋️ SATS Premier Lounge（T2 转机厅 Level 2）", desc: "可用 PP 卡或国泰金卡进。推荐：喇沙 Laksa 必吃！另有热食、酒水、淋浴。" },
+            { time: "11:05", title: "✈️ MH614 起飞（T2→KUL T1）", desc: "波音737-800，航班时长约1h20min。去 KUL T1，不是 KLIA2" },
+            { time: "11:47", title: "✈️ 到达吉隆坡 KUL Terminal 1", desc: "过海关（已填 MDAC）。T1 到达大厅有电话卡柜台、换汇点、ATM" },
             { time: "12:30", title: "Grab 至酒店", desc: "The Platinum 2 KLCC by Miudee，约45分钟，RM50-70" },
             { time: "13:00", title: "酒店入住 + 休整", desc: "" },
-            { time: "15:00", title: "🚶 双子塔外观 + KLCC 公园", desc: "音乐喷泉（每晚灯光秀）" },
-            { time: "18:00", title: "晚餐：KLCC 商场或亚罗街", desc: "" },
+            { time: "15:00", title: "🚶 双子塔外观 + KLCC 公园", desc: "漫步50英亩公园，湖边拍照，看双子塔全景。Lake Symphony 音乐喷泉 20:00起约每30分钟一场，免费🎵" },
+            { time: "15:30", title: "☕ Suria KLCC 下午茶（Bacha Coffee / THIRTY8）", desc: "推荐：<b>Bacha Coffee</b>（摩洛哥宫廷风超好拍）KLCC mall 1F；或<b>THIRTY8</b> @ Grand Hyatt 38F 双子塔全景下午茶 RM168/2位" },
+            { time: "17:00", title: "🛍️ 逛 Suria KLCC / KLCC Aquaria", desc: "300+商店可以逛，或者去 Aquaria 海洋馆" },
+            { time: "18:30", title: "🍽️ 晚餐推荐 A：Madam Kwan's 关夫人（马来/娘惹菜）", desc: "📌 Suria KLCC <b>4楼</b>（逛完Bacha Coffee直接上楼！）。招牌椰浆饭、Otak Otak、马来盏炒杂菜。人均RM50-100，地道又实惠" },
+            { time: "18:30", title: "🍽️ 晚餐推荐 B：亚罗街夜市", desc: "备选，Grab 5分钟。葡式烧鱼、沙爹串、炒粿条" },
           ]
         },
         {
@@ -393,9 +408,11 @@
           timeline: [
             { time: "10:00", title: "起床 + 早餐", desc: "亚坤咖椰吐司" },
             { time: "12:00", title: "退房", desc: "" },
-            { time: "15:00", title: "Grab 至吉隆坡国际机场 KUL", desc: "CX724 17:40 起飞" },
+            { time: "14:30", title: "🚖 Grab 至吉隆坡机场 KUL T1", desc: "CX724 从 T1 出发，预留充足时间，约45分钟，RM50-70" },
+            { time: "15:30-16:00", title: "🧳 办登机 + 过海关", desc: "国泰金卡可用优先通道" },
+            { time: "16:00-17:30", title: "🛋️ Cathay Pacific Lounge 或 Plaza Premium Lounge（KUL T1）", desc: "国泰在 KUL T1 休息室不错，有热食、酒吧、淋浴。也可用 PP 卡进 Plaza Premium" },
             { time: "17:40", title: "✈️ CX724 起飞", desc: "吉隆坡 → 香港" },
-            { time: "21:08", title: "到达香港 🏠", desc: "结束愉快的行程！" },
+            { time: "21:08", title: "🏠 到达香港", desc: "结束愉快的行程！" },
           ]
         },
       ],
