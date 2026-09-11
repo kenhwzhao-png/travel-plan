@@ -5,13 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>新隆旅行攻略 2026</title>
   <style>
+    :root {
+      --bg: #eef4f1;
+      --card: #ffffff;
+      --primary: #0d9488;
+      --primary-dark: #0b7c72;
+      --secondary: #2563eb;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --kicker: #a7f3e6;
+      --line: #e5e7eb;
+      --ok: #16a34a;
+      --danger: #ef4444;
+      --warn: #f59e0b;
+      --cat-transport: #2563eb;
+      --cat-food: #f59e0b;
+      --cat-sight: #10b981;
+      --cat-show: #8b5cf6;
+      --cat-stay: #64748b;
+      --cat-shop: #ec4899;
+      --row-h: 46px;
+      --radius: 16px;
+      --shadow: 0 2px 10px rgba(31, 41, 55, 0.08);
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f5f5; color: #333; line-height: 1.5; -webkit-text-size-adjust: 100%; }
-    
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; -webkit-text-size-adjust: 100%; }
+
     /* ============ 登录页 ============ */
     #loginOverlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #0d9488 0%, #2563eb 100%);
       z-index: 9999;
       display: flex; align-items: center; justify-content: center;
     }
@@ -27,10 +50,10 @@
       border: 2px solid #e0e0e0; border-radius: 8px;
       font-size: 16px; outline: none; transition: border-color 0.2s;
     }
-    .login-box input:focus { border-color: #667eea; }
+    .login-box input:focus { border-color: var(--primary); }
     .login-box button {
       width: 100%; padding: 12px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #0d9488 0%, #2563eb 100%);
       color: white; border: none; border-radius: 8px;
       font-size: 16px; font-weight: 600; cursor: pointer;
     }
@@ -41,115 +64,169 @@
       .login-box input { font-size: 18px; }
     }
 
-    header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 18px 15px; text-align: center; position: sticky; top: 0; z-index: 100; }
-    header h1 { font-size: 20px; margin-bottom: 4px; }
-    header p { font-size: 13px; opacity: 0.9; }
-    
-    .container { max-width: 800px; margin: 0 auto; padding: 12px; }
-    
+    /* ============ 顶部 Header（kicker + 大标题 + 圆形按钮组）============ */
+    header { background: linear-gradient(135deg, #0d9488 0%, #2563eb 100%); color: white; padding: 16px 15px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(13,148,136,0.25); }
+    .head-inner { max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .kicker { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.85; margin-bottom: 3px; }
+    header h1 { font-size: 22px; font-weight: 800; margin-bottom: 2px; }
+    header .sub { font-size: 12px; opacity: 0.85; }
+    .head-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .icon-btn {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,0.16); border: none; color: white;
+      font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      -webkit-tap-highlight-color: transparent; transition: background 0.2s;
+    }
+    .icon-btn:hover { background: rgba(255,255,255,0.28); }
+    .icon-btn.active { background: rgba(255,255,255,0.38); }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 14px 12px; }
+
+    /* ============ 视图切换 ============ */
+    .view-calendar { display: none; }
+    body.view-cal .view-day { display: none; }
+    body.view-cal .view-calendar { display: block; }
+
+    /* 搜索框 */
+    .search-box { margin-bottom: 15px; }
+    .search-box input {
+      width: 100%; padding: 11px 14px; border: 1px solid var(--line); border-radius: 12px;
+      font-size: 14px; outline: none; background: var(--card); box-shadow: var(--shadow);
+    }
+    .search-box input:focus { border-color: var(--primary); }
+
     /* 紧急提醒横幅 */
-    .urgent-banner { background: #ffe0e0; border: 2px solid #dc3545; border-radius: 8px; padding: 12px; margin-bottom: 15px; }
-    .urgent-banner h3 { color: #dc3545; margin-bottom: 8px; font-size: 15px; }
-    .urgent-banner p { font-size: 12px; color: #721c24; margin: 4px 0; line-height: 1.4; word-break: break-word; }
-    .urgent-banner a { color: #dc3545; text-decoration: underline; }
-    
-    /* 出发前重要事项 */
-    .prep-section { background: white; border-radius: 10px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .prep-section h2 { background: #ffc107; color: #333; padding: 12px 15px; font-size: 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; -webkit-tap-highlight-color: transparent; }
-    .prep-section h2:hover { background: #ffb300; }
+    .urgent-banner { background: #fef2f2; border: 2px solid #fecaca; border-radius: var(--radius); padding: 12px; margin-bottom: 15px; box-shadow: var(--shadow); }
+    .urgent-banner h3 { color: var(--danger); margin-bottom: 8px; font-size: 15px; }
+    .urgent-banner p { font-size: 12px; color: #7f1d1d; margin: 4px 0; line-height: 1.4; word-break: break-word; }
+    .urgent-banner a { color: var(--danger); text-decoration: underline; }
+
+    /* 出发前重要事项 / 现金指南（折叠卡） */
+    .prep-section { background: var(--card); border-radius: var(--radius); margin-bottom: 15px; overflow: hidden; box-shadow: var(--shadow); }
+    .prep-section h2 { background: #ecfdf5; color: var(--text); padding: 12px 15px; font-size: 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; -webkit-tap-highlight-color: transparent; border-bottom: 1px solid #d1fae5; }
+    .prep-section h2:hover { background: #d1fae5; }
     .prep-content { padding: 12px; display: none; }
     .prep-section.open .prep-content { display: block; }
     .prep-section h2 .arrow { transition: transform 0.3s; font-size: 12px; }
     .prep-section.open h2 .arrow { transform: rotate(180deg); }
-    
+
     .checklist { list-style: none; }
-    .checklist li { padding: 8px 6px; border-bottom: 1px solid #eee; display: flex; align-items: flex-start; gap: 8px; }
+    .checklist li { padding: 8px 6px; border-bottom: 1px solid var(--line); display: flex; align-items: flex-start; gap: 8px; }
     .checklist li:last-child { border-bottom: none; }
-    .checklist input[type="checkbox"] { margin-top: 2px; width: 20px; height: 20px; cursor: pointer; flex-shrink: 0; accent-color: #667eea; }
+    .checklist input[type="checkbox"] { margin-top: 2px; width: 20px; height: 20px; cursor: pointer; flex-shrink: 0; accent-color: var(--primary); }
     .checklist label { cursor: pointer; flex: 1; }
     .checklist .done label { text-decoration: line-through; color: #999; }
     .checklist .item-title { font-weight: 500; margin-bottom: 2px; font-size: 14px; }
-    .checklist .item-desc { font-size: 12px; color: #666; line-height: 1.3; }
-    
-    .category-title { font-size: 15px; font-weight: 600; color: #667eea; margin: 12px 0 8px 0; padding-bottom: 5px; border-bottom: 2px solid #667eea; }
+    .checklist .item-desc { font-size: 12px; color: var(--muted); line-height: 1.3; }
+
+    .category-title { font-size: 15px; font-weight: 600; color: var(--primary); margin: 12px 0 8px 0; padding-bottom: 5px; border-bottom: 2px solid var(--primary); }
     .category-title:first-child { margin-top: 0; }
-    
+
     /* 待办提醒 */
-    .reminder-banner { background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 12px; margin-bottom: 15px; }
-    .reminder-banner h3 { color: #856404; margin-bottom: 8px; font-size: 15px; }
-    .reminder-banner .task { background: white; padding: 8px; margin: 5px 0; border-radius: 5px; display: flex; align-items: flex-start; gap: 8px; }
+    .reminder-banner { background: #fffbeb; border: 1px solid #fde68a; border-radius: var(--radius); padding: 12px; margin-bottom: 15px; box-shadow: var(--shadow); }
+    .reminder-banner h3 { color: #92400e; margin-bottom: 8px; font-size: 15px; }
+    .reminder-banner .task { background: white; padding: 8px; margin: 5px 0; border-radius: 8px; display: flex; align-items: flex-start; gap: 8px; }
     .reminder-banner .task.done { opacity: 0.5; }
     .reminder-banner .task.done label { text-decoration: line-through; }
-    .reminder-banner input[type="checkbox"] { width: 18px; height: 18px; margin-top: 1px; flex-shrink: 0; accent-color: #ffc107; }
+    .reminder-banner input[type="checkbox"] { width: 18px; height: 18px; margin-top: 1px; flex-shrink: 0; accent-color: var(--warn); }
     .reminder-banner label { cursor: pointer; flex: 1; font-size: 13px; line-height: 1.3; }
-    
+
     /* 日期卡片 */
-    .day-card { background: white; border-radius: 10px; margin-bottom: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .day-header { padding: 12px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; border-bottom: 1px solid #eee; user-select: none; -webkit-tap-highlight-color: transparent; }
-    .day-header:hover { background: #e9ecef; }
+    .day-card { background: var(--card); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; box-shadow: var(--shadow); }
+    .day-header { padding: 12px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #f7faf9; border-bottom: 1px solid var(--line); user-select: none; -webkit-tap-highlight-color: transparent; }
+    .day-header:hover { background: #ecfdf5; }
     .day-header h2 { font-size: 15px; line-height: 1.3; }
-    .day-header .date { color: #666; font-size: 12px; margin-top: 2px; }
+    .day-header .date { color: var(--muted); font-size: 12px; margin-top: 2px; }
     .day-content { padding: 15px; display: none; }
     .day-card.open .day-content { display: block; }
     .arrow { transition: transform 0.3s; font-size: 12px; }
     .day-card.open .arrow { transform: rotate(180deg); }
-    
+
     /* 时间轴 */
     .timeline { position: relative; padding-left: 22px; }
-    .timeline::before { content: ''; position: absolute; left: 5px; top: 0; bottom: 0; width: 2px; background: #667eea; }
+    .timeline::before { content: ''; position: absolute; left: 5px; top: 0; bottom: 0; width: 2px; background: var(--primary); }
     .timeline-item { position: relative; padding: 8px 0 12px 12px; }
-    .timeline-item::before { content: ''; position: absolute; left: -20px; top: 16px; width: 10px; height: 10px; border-radius: 50%; background: #667eea; border: 2px solid white; box-shadow: 0 0 0 2px #667eea; }
-    .timeline-time { font-weight: 600; color: #667eea; font-size: 12px; }
+    .timeline-item::before { content: ''; position: absolute; left: -20px; top: 16px; width: 10px; height: 10px; border-radius: 50%; background: var(--cat, var(--primary)); border: 2px solid white; box-shadow: 0 0 0 2px var(--cat, var(--primary)); }
+    .timeline-time { font-weight: 600; color: var(--primary); font-size: 12px; }
     .timeline-title { font-size: 13px; font-weight: 500; margin: 2px 0; line-height: 1.3; }
     .timeline-desc { font-size: 12px; color: #666; line-height: 1.4; }
-    .timeline-warn { font-size: 12px; color: #dc3545; margin-top: 3px; line-height: 1.3; }
-    .timeline-info { font-size: 12px; color: #28a745; margin-top: 3px; line-height: 1.3; }
-    
+    .timeline-warn { font-size: 12px; color: var(--danger); margin-top: 3px; line-height: 1.3; }
+    .timeline-info { font-size: 12px; color: var(--ok); margin-top: 3px; line-height: 1.3; }
+
     /* 评论区 */
-    .comments-section { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
+    .comments-section { margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--line); }
     .comments-section h3 { margin-bottom: 8px; font-size: 14px; }
     .comment { background: #f8f9fa; padding: 8px; border-radius: 8px; margin-bottom: 8px; }
-    .comment .author { font-weight: 600; color: #667eea; font-size: 12px; }
+    .comment .author { font-weight: 600; color: var(--primary); font-size: 12px; }
     .comment .text { margin-top: 3px; font-size: 13px; line-height: 1.4; }
     .comment .time { font-size: 10px; color: #999; margin-top: 3px; }
     .comment-form { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
     .comment-form input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
-    .comment-form button { width: 100%; padding: 10px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; -webkit-tap-highlight-color: transparent; }
-    
+    .comment-form button { width: 100%; padding: 10px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; -webkit-tap-highlight-color: transparent; }
+
     /* 分享 */
-    .share-section { background: white; padding: 12px; border-radius: 10px; margin-bottom: 15px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .share-section { background: var(--card); padding: 12px; border-radius: var(--radius); margin-bottom: 15px; text-align: center; box-shadow: var(--shadow); }
     .share-section p { font-size: 13px; margin-bottom: 8px; }
     .share-section input { width: 100%; padding: 8px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; }
     .btn { padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; -webkit-tap-highlight-color: transparent; }
-    .btn-primary { background: #667eea; color: white; }
-    .btn-primary:active { background: #5568d3; }
-    
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:active { background: var(--primary-dark); }
+
+    /* ============ 周历视图（Planning Calendar）============ */
+    .cal-topbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+    .back-btn { padding: 8px 14px; border: none; border-radius: 999px; background: var(--card); color: var(--primary); font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow); -webkit-tap-highlight-color: transparent; }
+    .cal-hint { font-size: 11px; color: var(--muted); }
+    .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; background: var(--card); padding: 10px 14px; border-radius: 12px; margin-bottom: 12px; font-size: 12px; color: var(--muted); box-shadow: var(--shadow); }
+    .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+    .day-picker { display: none; gap: 6px; overflow-x: auto; margin-bottom: 10px; padding: 2px; -webkit-overflow-scrolling: touch; }
+    .day-picker button { flex: 0 0 auto; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); font-size: 12px; color: var(--muted); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .day-picker button.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .cal-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius); background: var(--card); box-shadow: var(--shadow); }
+    .cal-inner { min-width: 920px; position: relative; }
+    .cal-head { display: flex; border-bottom: 2px solid var(--line); background: var(--card); }
+    .cal-head-hours { width: 52px; flex: 0 0 52px; }
+    .cal-head-day { flex: 1; min-width: 108px; padding: 8px 4px; text-align: center; }
+    .cal-head-day .wd { font-size: 11px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
+    .cal-head-day .dt { font-size: 13px; font-weight: 600; color: var(--text); }
+    .cal-body { display: flex; }
+    .cal-hours { width: 52px; flex: 0 0 52px; position: sticky; left: 0; z-index: 2; background: var(--card); border-right: 1px solid var(--line); }
+    .cal-hour { height: var(--row-h); font-size: 10px; color: var(--muted); text-align: right; padding-right: 6px; transform: translateY(-6px); }
+    .cal-col { flex: 1; min-width: 108px; position: relative; height: calc(18 * var(--row-h)); background-image: linear-gradient(to bottom, var(--line) 1px, transparent 1px); background-size: 100% var(--row-h); border-left: 1px solid var(--line); }
+    .cal-ev { position: absolute; border-radius: 6px; padding: 2px 4px; font-size: 10px; line-height: 1.25; overflow: hidden; border-left: 3px solid; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .cal-ev .t { font-weight: 700; font-size: 10px; display: block; }
+    .cal-ev .n { display: block; font-size: 10px; color: var(--text); opacity: 0.85; }
+
     footer { text-align: center; padding: 15px 12px; color: #999; font-size: 11px; }
-    
+
     /* 📱 手机适配 (max-width: 768px) */
     @media (max-width: 768px) {
-      header { padding: 15px 12px; }
+      :root { --row-h: 40px; }
+      header { padding: 13px 12px; }
       header h1 { font-size: 18px; }
+      .kicker { font-size: 10px; letter-spacing: 1px; }
+      .icon-btn { width: 34px; height: 34px; font-size: 14px; }
       .container { padding: 10px; }
-      
+      .cal-inner { min-width: 900px; }
+      .day-picker { display: flex; }
+
       .urgent-banner { padding: 10px; margin-bottom: 12px; }
       .urgent-banner h3 { font-size: 14px; }
-      
+
       .prep-section h2 { padding: 10px 12px; font-size: 15px; }
       .prep-content { padding: 10px; }
       .checklist li { padding: 7px 5px; }
-      
+
       .reminder-banner { padding: 10px; margin-bottom: 12px; }
-      
+
       .day-card { margin-bottom: 10px; }
       .day-header { padding: 10px 12px; }
       .day-content { padding: 12px; }
-      
+
       .timeline { padding-left: 20px; }
       .timeline-item { padding: 6px 0 10px 10px; }
       .timeline-item::before { left: -18px; width: 9px; height: 9px; }
     }
-    
+
     @media (max-width: 380px) {
       header h1 { font-size: 16px; }
       .day-header h2 { font-size: 14px; }
@@ -173,11 +250,44 @@
     </div>
   </div>
   <header>
-    <h1>🌏 新隆旅行攻略 2026</h1>
-    <p>9月30日 — 10月7日 | 新加坡 + 吉隆坡</p>
+    <div class="head-inner">
+      <div>
+        <div class="kicker">深圳 → 香港 → 新加坡 → 吉隆坡 · 9.30 – 10.7</div>
+        <h1>🌏 新隆旅行攻略 2026</h1>
+        <div class="sub">新加坡 + 吉隆坡 · 8 天 · Kenneth & 火山哥</div>
+      </div>
+      <div class="head-actions">
+        <button class="icon-btn active" id="btnDayView" title="按天视图" onclick="switchView('day')">📋</button>
+        <button class="icon-btn" id="btnCalView" title="周历总览" onclick="switchView('calendar')">📅</button>
+      </div>
+    </div>
   </header>
-  
+
+  <!-- ============ 周历视图 ============ -->
+  <div class="view-calendar" id="viewCalendar">
+    <div class="container">
+      <div class="cal-topbar">
+        <button class="back-btn" onclick="switchView('day')">← 返回按天视图</button>
+        <span class="cal-hint">8 天总览 · 点色块跳当天详情</span>
+      </div>
+      <div class="legend" id="calLegend"></div>
+      <div class="day-picker" id="dayPicker"></div>
+      <div class="cal-scroll">
+        <div class="cal-inner">
+          <div class="cal-head" id="calendarHead"></div>
+          <div class="cal-body" id="calendarBody"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 按天视图（默认）============ -->
+  <div class="view-day">
   <div class="container">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="🔍 搜索行程（如：榴莲、演唱会、清真寺）" oninput="filterDays(this.value)" />
+    </div>
+
     <!-- 紧急横幅 -->
     <div class="urgent-banner">
       <h3>🚨 出发前必做！</h3>
@@ -186,7 +296,7 @@
       <p>🦀 <b>9月28日</b>：预订珍宝海鲜（<a href="https://www.jumboseafood.com.sg" target="_blank" rel="noopener">官网</a> / +65 6532 3435）</p>
       <p>🚖 <b>9月28日下午</b>：预订港车（9/30 早上 07:30 出发去机场）</p>
     </div>
-    
+
     <!-- 分享区 -->
     <div class="share-section">
       <p>📱 分享给火山哥：</p>
@@ -194,7 +304,7 @@
       <button class="btn btn-primary" onclick="copyLink()">复制链接</button>
       <span id="copyTip" style="color: #28a745; display: none; margin-left: 10px; font-size: 12px;">✅ 已复制！</span>
     </div>
-    
+
     <!-- 出发前重要事项（带 checkbox） -->
     <div class="prep-section open" id="prepSection">
       <h2 onclick="toggleSection('prepSection')">
@@ -216,7 +326,7 @@
           <li><input type="checkbox" id="item-10" onchange="saveChecklist()" /><label for="item-10"><div class="item-title">The Weeknd 演唱会门票（电子/纸质）</div><div class="item-desc">10月2日 National Stadium，提前截图保存到手机相册</div></label></li>
           <li><input type="checkbox" id="item-11" onchange="saveChecklist()" /><label for="item-11"><div class="item-title">🚖 已订港车（9/30 早上 07:30 出发）</div><div class="item-desc">5座/7座包车，9/28 下午订好。约车app：HKCar / ucab / 微信小程序"香港机场快线" / 直接联系熟悉的司机</div></label></li>
         </ul>
-        
+
         <div class="category-title">📲 出发前必装 APP</div>
         <ul class="checklist">
           <li><input type="checkbox" id="app-1" onchange="saveChecklist()" /><label for="app-1"><div class="item-title">Grab（打车）</div><div class="item-desc">新马两地通用，支持支付宝付款</div></label></li>
@@ -226,7 +336,7 @@
           <li><input type="checkbox" id="app-5" onchange="saveChecklist()" /><label for="app-5"><div class="item-title">MyICA（新加坡入境）</div><div class="item-desc">9月27日前填入境表</div></label></li>
           <li><input type="checkbox" id="app-6" onchange="saveChecklist()" /><label for="app-6"><div class="item-title">支付宝（部分商家支持）</div><div class="item-desc">汇率比现金好</div></label></li>
         </ul>
-        
+
         <div class="category-title">📞 紧急联系方式</div>
         <ul class="checklist">
           <li><label><div class="item-title">新加坡报警/救护：<b>999</b></div><div class="item-desc">火警/救护/报警通用</div></label></li>
@@ -236,7 +346,7 @@
           <li><label><div class="item-title">新加坡濠景福朋喜来登酒店：<b>+65 6739 7788</b></div><div class="item-desc">382 Havelock Rd, Singapore 169629</div></label></li>
           <li><label><div class="item-title">The Platinum 2 KLCC by Miudee：<b>前台+60 3-2022 0000</b></div><div class="item-desc">C-23, The Platinum 2, 107 Jalan Kuchai Lama, KL</div></label></li>
         </ul>
-        
+
         <div class="category-title">✈️ 航班 & 休息室信息</div>
         <ul class="checklist">
           <li><label><div class="item-title">✈️ CX791 9/30 HKG→SIN 11:50-15:40</div><div class="item-desc">香港机场 T1。出发前可去 CX Lounge The Bridge 吃早餐（国泰金卡可进）</div></label></li>
@@ -246,7 +356,7 @@
           <li><label><div class="item-title">✈️ CX724 10/7 KUL→HKG 17:40-21:08</div><div class="item-desc">吉隆坡<b>KUL T1</b>出发。国泰金卡可进 CX 自营休息室（有热食），PP 卡也可进 Plaza Premium Lounge</div></label></li>
           <li><label><div class="item-title">✈️ 航班总程</div><div class="item-desc">CX791 9/30 → MH614 10/3 → CX724 10/7。全程国泰/马航，均有国泰金卡权益</div></label></li>
         </ul>
-        
+
         <div class="category-title">🛡️ 旅行保险（建议）</div>
         <ul class="checklist">
           <li><input type="checkbox" id="ins-1" onchange="saveChecklist()" /><label for="ins-1"><div class="item-title">已购买旅行保险</div><div class="item-desc">建议覆盖：医疗、行李丢失、航班延误、紧急救援</div></label></li>
@@ -254,13 +364,13 @@
         </ul>
       </div>
     </div>
-    
+
     <!-- 提醒区 -->
     <div class="reminder-banner" id="reminderBanner">
       <h3>⏰ 近期待办</h3>
       <div id="reminderList"></div>
     </div>
-    
+
     <!-- 现金准备指南 -->
     <div class="prep-section" id="cashGuide">
       <h2 onclick="toggleSection('cashGuide')">💰 马来西亚现金准备指南 <span class="arrow">▼</span></h2>
@@ -270,7 +380,7 @@
           <li><label><div class="item-title">每人准备：RM500-600（≈¥750-900）</div><div class="item-desc">两人合计：RM1000-1200（≈¥1500-1800）</div></label></li>
           <li><label><div class="item-title">取现地点：吉隆坡机场ATM（支持银联）</div><div class="item-desc">Maybank / Public Bank ATM，手续费约¥15-20/笔</div></label></li>
         </ul>
-        
+
         <div class="category-title">📊 详细分类（2人合计）</div>
         <ul class="checklist">
           <li><label><div class="item-title">🍜 餐饮（必须现金）：RM400-600</div><div class="item-desc">亚罗街夜市、ICC Pudu小吃、榴莲摊只收现金</div></label></li>
@@ -279,13 +389,13 @@
           <li><label><div class="item-title">🛍️ 小吃/手信（现金）：RM200-300</div><div class="item-desc">榴莲、煎蕊、沙爹串、手信（部分可刷卡）</div></label></li>
           <li><label><div class="item-title">🔖 其他备用：RM200</div><div class="item-desc">清真寺捐款（自愿）+ 小费 + 紧急备用</div></label></li>
         </ul>
-        
+
         <div class="category-title">💳 支付方式指南</div>
         <ul class="checklist">
           <li><label><div class="item-title">✅ 可刷信用卡/Alipay</div><div class="item-desc">商场、中高端餐厅、Grab、酒店、双子塔门票</div></label></li>
           <li><label><div class="item-title">❌ 只收现金</div><div class="item-desc">夜市、小吃摊、榴莲摊、清真寺小展厅、布城游船</div></label></li>
         </ul>
-        
+
         <div class="category-title">📒 现金面额分配建议（每人）</div>
         <ul class="checklist">
           <li><label><div class="item-title">RM100 × 4 = RM400</div><div class="item-desc">大钞备用（商场/餐厅可找开）</div></label></li>
@@ -294,21 +404,21 @@
           <li><label><div class="item-title">RM10 × 10 = RM100</div><div class="item-desc">零钱（小吃/交通）</div></label></li>
           <li><label><div class="item-title">RM5 × 10 = RM50</div><div class="item-desc">零钱（清真寺捐款/小费）</div></label></li>
         </ul>
-        
+
         <div class="category-title">⚠️ 省钱小贴士</div>
         <ul class="checklist">
           <li><label><div class="item-title">🚗 Grab全程可用</div><div class="item-desc">2人出行，打车方便（绑定信用卡或Alipay，无需带太多现金）</div></label></li>
           <li><label><div class="item-title">榴莲去SS2</div><div class="item-desc">比Jalan Alor便宜</div></label></li>
           <li><label><div class="item-title">大额消费刷卡</div><div class="item-desc">餐厅/商场/酒店尽量刷卡，保留现金给小吃摊</div></label></li>
         </ul>
-        
-        <p style="margin-top:12px;padding:10px;background:#e8f5e9;border-radius:8px;font-size:13px;color:#2e7d32;">💡 <b>建议</b>：到达吉隆坡机场后，先在ATM取RM500-600/人，然后绑定Grab信用卡，大额消费刷卡。</p>
+
+        <p style="margin-top:12px;padding:10px;background:#ecfdf5;border-radius:8px;font-size:13px;color:#065f46;">💡 <b>建议</b>：到达吉隆坡机场后，先在ATM取RM500-600/人，然后绑定Grab信用卡，大额消费刷卡。</p>
       </div>
     </div>
-    
+
     <!-- 天数列表 -->
     <div id="daysList"></div>
-    
+
     <!-- 评论区（全局） -->
     <div class="day-card">
       <div class="day-header" onclick="toggleDayCard(this)">
@@ -328,9 +438,10 @@
       </div>
     </div>
   </div>
-  
+  </div>
+
   <footer>🌏 祝你 & 火山哥旅途愉快！</footer>
-  
+
   <script>
     // ============ 行程数据（时间轴版本） ============
     const travelData = {
@@ -486,55 +597,80 @@
       ],
       comments: []
     };
-    
+
+    // ============ 分类体系（周历色块 + 时间轴圆点颜色）============
+    const CATS = {
+      transport: { c: '#2563eb', bg: '#e3ecfe', label: '交通' },
+      food:      { c: '#f59e0b', bg: '#fdf0d9', label: '餐饮' },
+      sight:     { c: '#10b981', bg: '#dff7ef', label: '景点' },
+      show:      { c: '#8b5cf6', bg: '#efe9fd', label: '演出' },
+      stay:      { c: '#64748b', bg: '#e8edf3', label: '住宿/休息' },
+      shop:      { c: '#ec4899', bg: '#fde7f1', label: '购物' },
+    };
+    // 每天按 timeline 顺序显式标注分类（与 travelData.days 对齐）
+    const DAY_CATS = {
+      0: ['stay','transport','transport','transport','food','transport','transport','sight','sight','transport','stay','food','stay'],
+      1: ['stay','transport','food','transport','transport','sight','sight','food','sight','sight','food','stay'],
+      2: ['food','sight','sight','sight','sight','food','shop','shop','stay','transport','transport','show','show','transport'],
+      3: ['stay','transport','transport','food','transport','transport','transport','stay','sight','food','shop','food'],
+      4: ['transport','sight','transport','food','transport','sight','transport','sight','transport','sight','transport','food','transport','food','transport'],
+      5: ['transport','sight','sight','sight','sight','food','sight','sight','sight','sight','transport','shop','food','food','transport'],
+      6: ['stay','shop','food','transport','stay','shop','transport','food','transport'],
+      7: ['food','shop','food','transport','transport','food','transport','transport'],
+    };
+    travelData.days.forEach(d => d.timeline.forEach((t, i) => {
+      t.cat = (DAY_CATS[d.id] && DAY_CATS[d.id][i]) || 'sight';
+    }));
+
     // ============ 渲染 ============
     function render() {
       renderReminders();
       renderDays();
       renderComments();
+      renderCalendarChrome();
       updateShareLink();
     }
-    
+
     function renderReminders() {
       const banner = document.getElementById('reminderList');
-      const today = new Date('2026-07-01'); // 实际部署时改 new Date()
+      const today = new Date(); today.setHours(0,0,0,0);
       const upcoming = travelData.reminders
         .filter(r => !r.done && new Date(r.date) >= today)
         .sort((a, b) => new Date(a.date) - new Date(b.date));
-      
+
       if (upcoming.length === 0) {
         banner.innerHTML = '<p style="color:#666;font-size:13px;">✅ 暂无待办事项</p>';
         return;
       }
-      
+
       banner.innerHTML = upcoming.map(r => `
         <div class="task ${r.done ? 'done' : ''}">
           <input type="checkbox" ${r.done ? 'checked' : ''} onchange="toggleReminder(${r.id})" />
           <label onclick="toggleReminder(${r.id})">
-            <span style="color:#856404;font-weight:600;">${r.date}</span> ${r.task}
+            <span style="color:#92400e;font-weight:600;">${r.date}</span> ${r.task}
             ${r.link ? `<a href="${r.link}" target="_blank" rel="noopener" style="margin-left:8px;font-size:12px;">📎 链接</a>` : ''}
           </label>
         </div>
       `).join('');
     }
-    
+
     function toggleReminder(id) {
       const r = travelData.reminders.find(r => r.id === id);
       if (r) r.done = !r.done;
       save();
       renderReminders();
     }
-    
+
     function toggleSection(id) {
       const el = document.getElementById(id);
       el.classList.toggle('open');
     }
-    
+
     function toggleDayCard(headerEl) {
       const card = headerEl.parentElement;
       card.classList.toggle('open');
     }
-    
+
     function renderDays() {
       const list = document.getElementById('daysList');
       list.innerHTML = travelData.days.map(day => `
@@ -548,15 +684,17 @@
           </div>
           <div class="day-content">
             <div class="timeline">
-              ${day.timeline.map(item => `
-                <div class="timeline-item">
+              ${day.timeline.map(item => {
+                const cat = CATS[item.cat] || CATS.sight;
+                return `
+                <div class="timeline-item" style="--cat:${cat.c}">
                   <div class="timeline-time">${item.time}</div>
                   <div class="timeline-title">${item.title}</div>
                   ${item.desc ? `<div class="timeline-desc">${item.desc}</div>` : ''}
                   ${item.warn ? `<div class="timeline-warn">${item.warn}</div>` : ''}
                   ${item.info ? `<div class="timeline-info">${item.info}</div>` : ''}
-                </div>
-              `).join('')}
+                </div>`;
+              }).join('')}
             </div>
             <div class="comments-section">
               <h3>💬 这天讨论区</h3>
@@ -570,10 +708,122 @@
           </div>
         </div>
       `).join('');
-      
+
       travelData.days.forEach(day => renderDayComments(day.id));
     }
-    
+
+    // ============ 搜索过滤 ============
+    function filterDays(q) {
+      q = q.trim().toLowerCase();
+      document.querySelectorAll('#daysList .day-card').forEach(card => {
+        let hits = 0;
+        card.querySelectorAll('.timeline-item').forEach(it => {
+          const show = !q || it.textContent.toLowerCase().includes(q);
+          it.style.display = show ? '' : 'none';
+          if (show && q) hits++;
+        });
+        const headHit = !q || card.querySelector('.day-header').textContent.toLowerCase().includes(q);
+        card.style.display = (q && hits === 0 && !headHit) ? 'none' : '';
+      });
+    }
+
+    // ============ 视图切换 ============
+    function switchView(v) {
+      document.body.classList.toggle('view-cal', v === 'calendar');
+      document.getElementById('btnCalView').classList.toggle('active', v === 'calendar');
+      document.getElementById('btnDayView').classList.toggle('active', v !== 'calendar');
+      window.scrollTo(0, 0);
+      if (v === 'calendar') renderCalendar();
+    }
+
+    // ============ 周历视图 ============
+    function parseTime(t) {
+      const parts = String(t).split('-');
+      const toH = s => { const [h, m] = s.trim().split(':').map(Number); return h + (m || 0) / 60; };
+      const start = toH(parts[0]);
+      let end = parts[1] ? toH(parts[1]) : start + 1;
+      if (end <= start) end = start + 1;
+      return { start, end: Math.min(end, 24) };
+    }
+
+    // 重叠事件贪心分列（经典 calendar layout）
+    function layoutDay(evs) {
+      const sorted = [...evs].sort((a, b) => a.start - b.start || a.end - b.end);
+      const clusters = []; let cur = null;
+      sorted.forEach(ev => {
+        if (cur && ev.start < cur.end) { cur.evs.push(ev); cur.end = Math.max(cur.end, ev.end); }
+        else { cur = { evs: [ev], end: ev.end }; clusters.push(cur); }
+      });
+      clusters.forEach(cl => {
+        const cols = [];
+        cl.evs.forEach(ev => {
+          const col = cols.find(c => c[c.length - 1].end <= ev.start);
+          if (col) col.push(ev); else cols.push([ev]);
+        });
+        cols.forEach((col, ci) => col.forEach(ev => { ev.colN = cols.length; ev.colI = ci; }));
+      });
+    }
+
+    function renderCalendarChrome() {
+      // 图例
+      const legend = document.getElementById('calLegend');
+      legend.innerHTML = Object.entries(CATS).map(([k, v]) =>
+        `<span><i style="background:${v.c}"></i>${v.label}</span>`).join('');
+      // 日期表头 + 手机单日切换
+      const wds = ['日', '一', '二', '三', '四', '五', '六'];
+      const headHtml = travelData.days.map(d => {
+        const dt = new Date(2026, 8, 30 + d.id);
+        return `<div class="cal-head-day"><div class="wd">周${wds[dt.getDay()]}</div><div class="dt">${dt.getMonth() + 1}/${dt.getDate()}</div></div>`;
+      }).join('');
+      document.getElementById('calendarHead').innerHTML = `<div class="cal-head-hours"></div>` + headHtml;
+      document.getElementById('dayPicker').innerHTML =
+        travelData.days.map(d => {
+          const dt = new Date(2026, 8, 30 + d.id);
+          return `<button onclick="focusDay(${d.id}, this)">${dt.getMonth() + 1}/${dt.getDate()} ${d.title.replace(/\s/g, '').slice(0, 6)}</button>`;
+        }).join('');
+    }
+
+    function renderCalendar() {
+      const START = 6;
+      const body = document.getElementById('calendarBody');
+      let html = `<div class="cal-hours">`;
+      for (let h = START; h < 24; h++) html += `<div class="cal-hour">${String(h).padStart(2, '0')}:00</div>`;
+      html += `</div>`;
+      travelData.days.forEach(day => {
+        const evs = day.timeline.map(t => ({ raw: t, ...parseTime(t.time) }));
+        layoutDay(evs);
+        html += `<div class="cal-col" data-day="${day.id}">`;
+        evs.forEach(ev => {
+          const cat = CATS[ev.raw.cat] || CATS.sight;
+          const dur = Math.max(ev.end - ev.start, 0.5);
+          const w = 100 / ev.colN;
+          html += `<div class="cal-ev" style="top:calc(${(ev.start - START)} * var(--row-h) + 1px);height:calc(${dur} * var(--row-h) - 3px);left:calc(${ev.colI * w}% + 2px);width:calc(${w}% - 5px);border-color:${cat.c};background:${cat.bg};" onclick="jumpToDay(${day.id})" title="${ev.raw.title.replace(/"/g, '')}">
+            <span class="t" style="color:${cat.c}">${ev.raw.time}</span>
+            <span class="n">${ev.raw.title}</span>
+          </div>`;
+        });
+        html += `</div>`;
+      });
+      body.innerHTML = html;
+    }
+
+    function focusDay(i, btn) {
+      document.querySelectorAll('#dayPicker button').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      const col = document.querySelector(`.cal-col[data-day="${i}"]`);
+      const sc = document.querySelector('.cal-scroll');
+      if (col && sc) sc.scrollTo({ left: col.offsetLeft - 56, behavior: 'smooth' });
+    }
+
+    function jumpToDay(dayId) {
+      switchView('day');
+      const card = document.getElementById('day-' + dayId);
+      if (card) {
+        card.classList.add('open');
+        setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+      }
+    }
+
     function renderComments() {
       const list = document.getElementById('commentsList');
       const general = travelData.comments.filter(c => !c.dayId);
@@ -587,27 +837,27 @@
           </div>
         `).join('');
     }
-    
+
     function addComment() {
       const author = document.getElementById('commentAuthor').value || '匿名';
       const text = document.getElementById('commentInput').value;
       if (!text) return;
-      
+
       travelData.comments.push({
         author, text, time: new Date().toLocaleString('zh-CN')
       });
-      
+
       document.getElementById('commentInput').value = '';
       save();
       renderComments();
     }
-    
+
     function renderDayComments(dayId) {
       const el = document.getElementById(`day-comments-${dayId}`);
       if (!el) return;
-      
+
       const dayComments = travelData.comments.filter(c => c.dayId === dayId);
-      el.innerHTML = dayComments.length === 0 
+      el.innerHTML = dayComments.length === 0
         ? '<p style="color:#999;font-size:12px;">暂无留言</p>'
         : dayComments.map(c => `
           <div class="comment">
@@ -617,28 +867,28 @@
           </div>
         `).join('');
     }
-    
+
     function addDayComment(dayId) {
       const authorEl = document.getElementById(`day-comment-author-${dayId}`);
       const inputEl = document.getElementById(`day-comment-input-${dayId}`);
       const author = authorEl.value || '匿名';
       const text = inputEl.value;
       if (!text) return;
-      
+
       travelData.comments.push({
         dayId, author, text, time: new Date().toLocaleString('zh-CN')
       });
-      
+
       inputEl.value = '';
       save();
       renderDayComments(dayId);
       renderComments();
     }
-    
+
     function updateShareLink() {
       document.getElementById('shareLink').value = window.location.href;
     }
-    
+
     function copyLink() {
       const input = document.getElementById('shareLink');
       input.select();
@@ -647,14 +897,14 @@
       tip.style.display = 'inline';
       setTimeout(() => tip.style.display = 'none', 2000);
     }
-    
+
     function save() {
       localStorage.setItem('travelData', JSON.stringify({
         reminders: travelData.reminders,
         comments: travelData.comments
       }));
     }
-    
+
     function saveChecklist() {
       const items = {};
       document.querySelectorAll('#itemsList input[type="checkbox"]').forEach(cb => {
@@ -666,7 +916,7 @@
       });
       localStorage.setItem('checklist', JSON.stringify(items));
     }
-    
+
     function loadChecklist() {
       const saved = localStorage.getItem('checklist');
       if (!saved) return;
@@ -678,7 +928,7 @@
         });
       } catch(e) {}
     }
-    
+
     // ============ 初始化 ============
     const saved = localStorage.getItem('travelData');
     if (saved) {
@@ -688,17 +938,17 @@
         travelData.reminders = parsed.reminders || travelData.reminders;
       } catch(e) {}
     }
-    
+
     // 修复误触：URL 带 ?uncheck=ID 可恢复某个提醒的勾选状态
     const uncheckId = parseInt(new URLSearchParams(window.location.search).get('uncheck'));
     if (uncheckId) {
       const r = travelData.reminders.find(r => r.id === uncheckId);
       if (r) { r.done = false; save(); }
     }
-    
+
     render();
     loadChecklist();
-    
+
     // ============ 登录保护 ============
     function doLogin() {
       const user = document.getElementById('loginUser').value.trim();
