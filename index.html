@@ -707,6 +707,7 @@
     function render() {
       renderReminders();
       renderDays();
+      moveCafeMap();
       renderComments();
       renderCalendarChrome();
       updateShareLink();
@@ -791,6 +792,15 @@
       `).join('');
 
       travelData.days.forEach(day => renderDayComments(day.id));
+    }
+
+    // 把「槟城咖啡馆清单」插到 10/6（槟城段收尾）之后，现场翻阅不用翻到页面底部
+    function moveCafeMap() {
+      const map = document.getElementById('cafeMap');
+      const anchor = document.getElementById('day-6');
+      if (map && anchor && anchor.parentNode) {
+        anchor.parentNode.insertBefore(map, anchor.nextSibling);
+      }
     }
 
     // ============ 搜索过滤 ============
